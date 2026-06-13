@@ -1,0 +1,13 @@
+# Ignore build and IDE files to keep docker context small
+target
+.git
+.gitignore
+.idea
+.vscode
+*.iml
+.DS_Store
+
+# Keep mvnw and .mvn (needed to build inside the image)
+!mvnw
+!.mvn
+
