@@ -2,7 +2,7 @@ package com.benson.menu_app.controller;
 
 import com.benson.menu_app.model.DTO.request.MenuItemRequestDTO;
 import com.benson.menu_app.model.DTO.response.MenuItemResponseDTO;
-import com.benson.menu_app.service.MenuItemService;
+import com.benson.menu_app.service.MenuItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class MenuItemController {
 
     @Autowired
-    private MenuItemService menuItemService;
+    private MenuItemServiceImpl menuItemService;
 
 
     @PostMapping("/menuItems")
