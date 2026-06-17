@@ -16,6 +16,10 @@ public record MenuItemRequestDTO(
         @NotNull(message = "price must not be null")
         @Positive(message = "price must be greater than zero")
         @Digits(integer = 10, fraction = 2, message = "price must have at most 10 digits and 2 decimal places")
-        BigDecimal price
+        BigDecimal price,
+
+        @NotNull(message = "categoryId must not be null")
+        @Positive(message = "categoryId must be greater than zero")
+        Long categoryId
 ) {
 }

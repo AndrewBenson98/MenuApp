@@ -36,7 +36,7 @@ class GlobalExceptionHandlerTest {
         MenuItemNotFoundException exception = new MenuItemNotFoundException(errorMessage);
 
         // Act
-        ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleNotFound(exception);
+        ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleMenuItemNotFound(exception);
 
         // Assert
         assertNotNull(response);
@@ -115,7 +115,7 @@ class GlobalExceptionHandlerTest {
         MenuItemNotFoundException exception = new MenuItemNotFoundException("Test error");
 
         // Act
-        ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleNotFound(exception);
+        ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleMenuItemNotFound(exception);
 
         // Assert
         assertNotNull(response.getBody());

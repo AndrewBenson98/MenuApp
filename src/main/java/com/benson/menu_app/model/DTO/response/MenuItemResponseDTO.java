@@ -15,6 +15,9 @@ public record MenuItemResponseDTO(
         String description,
 
         @NotNull(message = "price must not be null")
-        BigDecimal price
+        BigDecimal price,
+
+        @NotNull(message = "categoryId must not be null")
+        Long categoryId
 ) {
 }
