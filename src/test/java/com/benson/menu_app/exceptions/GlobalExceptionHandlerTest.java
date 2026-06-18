@@ -48,6 +48,43 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should handle CategoryNotFoundException with 404 status")
+    void testHandleCategoryNotFoundException() {
+        // Arrange
+        String errorMessage = "Category not found with id: 1";
+        CategoryNotFoundException exception = new CategoryNotFoundException(errorMessage);
+
+        // Act
+        ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleCategoryNotFound(exception);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(errorMessage, response.getBody().getMessage());
+        assertEquals(404, response.getBody().getStatus());
+        assertNotNull(response.getBody().getTimestamp());
+    }
+
+    @Test
+    @DisplayName("Should handle CategoryNotFoundException with different id")
+    void testHandleCategoryNotFoundException_DifferentId() {
+        // Arrange
+        String errorMessage = "Category not found with id: 999";
+        CategoryNotFoundException exception = new CategoryNotFoundException(errorMessage);
+
+        // Act
+        ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleCategoryNotFound(exception);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().getMessage().contains("999"));
+        assertEquals(404, response.getBody().getStatus());
+    }
+
+    @Test
     @DisplayName("Should handle ConstraintViolationException with 400 status")
     void testHandleConstraintViolationException() {
         // Arrange
