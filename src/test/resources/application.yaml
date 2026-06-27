@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: menu-app
+
+app:
+  security:
+    client-id: test-client-id
+    client-secret: test-client-secret
+    jwt-secret: test_ultra_secure_secret_key_for_this_demo_app
+    jwt-expiration: 3600000
