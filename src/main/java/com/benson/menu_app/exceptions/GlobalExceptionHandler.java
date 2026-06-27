@@ -17,7 +17,13 @@ public class GlobalExceptionHandler {
 
 	// Handle custom not-found exception -> 404
 	@ExceptionHandler(MenuItemNotFoundException.class)
-	public ResponseEntity<ErrorResponse> handleNotFound(MenuItemNotFoundException ex) {
+	public ResponseEntity<ErrorResponse> handleMenuItemNotFound(MenuItemNotFoundException ex) {
+		ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(CategoryNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleCategoryNotFound(CategoryNotFoundException ex) {
 		ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}

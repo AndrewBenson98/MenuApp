@@ -1,6 +1,7 @@
 package com.benson.menu_app.controller;
 
 import com.benson.menu_app.TestConfig;
+import com.benson.menu_app.exceptions.CategoryNotFoundException;
 import com.benson.menu_app.exceptions.MenuItemNotFoundException;
 import com.benson.menu_app.model.DTO.request.MenuItemRequestDTO;
 import com.benson.menu_app.model.DTO.response.MenuItemResponseDTO;
@@ -53,14 +54,16 @@ class MenuItemControllerTest {
         testRequestDTO = new MenuItemRequestDTO(
                 "Burger",
                 "Delicious burger",
-                new BigDecimal("9.99")
+                new BigDecimal("9.99"),
+                1L
         );
 
         testResponseDTO = new MenuItemResponseDTO(
                 1L,
                 "Burger",
                 "Delicious burger",
-                new BigDecimal("9.99")
+                new BigDecimal("9.99"),
+                1L
         );
     }
 
@@ -79,7 +82,32 @@ class MenuItemControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Burger")))
                 .andExpect(jsonPath("$.description", is("Delicious burger")))
-                .andExpect(jsonPath("$.price", is(9.99)));
+                .andExpect(jsonPath("$.price", is(9.99)))
+                .andExpect(jsonPath("$.categoryId", is(1)));
+
+        verify(menuItemService, times(1)).createMenuItem(any(MenuItemRequestDTO.class));
+    }
+
+    @Test
+    @DisplayName("Should return 400 when creating menu item with invalid categoryId")
+    void testCreateMenuItem_InvalidCategory() throws Exception {
+        // Arrange
+        MenuItemRequestDTO invalidRequestDTO = new MenuItemRequestDTO(
+                "Burger",
+                "Delicious burger",
+                new BigDecimal("9.99"),
+                999L
+        );
+
+        when(menuItemService.createMenuItem(any(MenuItemRequestDTO.class)))
+                .thenThrow(new CategoryNotFoundException("Category not found with id: 999"));
+
+        // Act & Assert
+        mockMvc.perform(post("/api/v1/menuItems")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequestDTO)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", containsString("Category not found")));
 
         verify(menuItemService, times(1)).createMenuItem(any(MenuItemRequestDTO.class));
     }
@@ -92,7 +120,8 @@ class MenuItemControllerTest {
                 2L,
                 "Pizza",
                 "Cheese pizza",
-                new BigDecimal("12.99")
+                new BigDecimal("12.99"),
+                2L
         );
         List<MenuItemResponseDTO> menuItems = Arrays.asList(testResponseDTO, responseDTO2);
 
@@ -105,8 +134,10 @@ class MenuItemControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].title", is("Burger")))
+                .andExpect(jsonPath("$[0].categoryId", is(1)))
                 .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].title", is("Pizza")));
+                .andExpect(jsonPath("$[1].title", is("Pizza")))
+                .andExpect(jsonPath("$[1].categoryId", is(2)));
 
         verify(menuItemService, times(1)).getAllMenuItems();
     }
@@ -139,7 +170,8 @@ class MenuItemControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Burger")))
                 .andExpect(jsonPath("$.description", is("Delicious burger")))
-                .andExpect(jsonPath("$.price", is(9.99)));
+                .andExpect(jsonPath("$.price", is(9.99)))
+                .andExpect(jsonPath("$.categoryId", is(1)));
 
         verify(menuItemService, times(1)).getMenuItem(1L);
     }
@@ -168,14 +200,16 @@ class MenuItemControllerTest {
         MenuItemRequestDTO updateDTO = new MenuItemRequestDTO(
                 "Updated Burger",
                 "Updated description",
-                new BigDecimal("11.99")
+                new BigDecimal("11.99"),
+                1L
         );
 
         MenuItemResponseDTO updatedResponseDTO = new MenuItemResponseDTO(
                 1L,
                 "Updated Burger",
                 "Updated description",
-                new BigDecimal("11.99")
+                new BigDecimal("11.99"),
+                1L
         );
 
         when(menuItemService.updateMenuItem(eq(1L), any(MenuItemRequestDTO.class)))
@@ -189,7 +223,32 @@ class MenuItemControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Updated Burger")))
                 .andExpect(jsonPath("$.description", is("Updated description")))
-                .andExpect(jsonPath("$.price", is(11.99)));
+                .andExpect(jsonPath("$.price", is(11.99)))
+                .andExpect(jsonPath("$.categoryId", is(1)));
+
+        verify(menuItemService, times(1)).updateMenuItem(eq(1L), any(MenuItemRequestDTO.class));
+    }
+
+    @Test
+    @DisplayName("Should return 404 when updating menu item with invalid categoryId")
+    void testUpdateMenuItem_InvalidCategory() throws Exception {
+        // Arrange
+        MenuItemRequestDTO updateDTO = new MenuItemRequestDTO(
+                "Updated Burger",
+                "Updated description",
+                new BigDecimal("11.99"),
+                999L
+        );
+
+        when(menuItemService.updateMenuItem(eq(1L), any(MenuItemRequestDTO.class)))
+                .thenThrow(new CategoryNotFoundException("Category not found with id: 999"));
+
+        // Act & Assert
+        mockMvc.perform(put("/api/v1/menuItems/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", containsString("Category not found")));
 
         verify(menuItemService, times(1)).updateMenuItem(eq(1L), any(MenuItemRequestDTO.class));
     }
@@ -244,4 +303,3 @@ class MenuItemControllerTest {
     }
 
 }
-
