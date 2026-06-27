@@ -3,6 +3,7 @@ package com.benson.menu_app.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -12,8 +13,11 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private String secret = "my_ultra_secure_secret_key_for_this_demo_app";
-    private long expiration = 3600000;
+    @Value("${app.security.jwt-secret}")
+    private String secret;
+
+    @Value("${app.security.jwt-expiration}")
+    private long expiration;
 
 
     private SecretKey getSigningKey() {

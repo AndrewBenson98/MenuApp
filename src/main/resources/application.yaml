@@ -1,3 +1,10 @@
 spring:
   application:
     name: menu-app
+
+app:
+  security:
+    client-id: ${APP_CLIENT_ID}
+    client-secret: ${APP_CLIENT_SECRET}
+    jwt-secret: ${APP_JWT_SECRET}
+    jwt-expiration: 3600000
