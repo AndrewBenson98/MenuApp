@@ -1,6 +1,21 @@
 spring:
   application:
     name: menu-app
+  datasource:
+    url: jdbc:mysql://localhost:3306/menu_app
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
 app:
   security:
